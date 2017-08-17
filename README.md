@@ -38,6 +38,7 @@ example
 ```
 exec me test
 ```
-    This will be sent to IRC as /me test, any commands can be sent in this format, messages not proceeded with exec get sent as normal slack mesages and dont hit twitch.
+    This will be sent to IRC as /me test, any commands can be sent in this format, 
+    messages not proceeded with exec get sent as normal slack mesages and dont hit twitch.
     Done
 
