@@ -20,7 +20,6 @@ var slackTwitch = require('slack-to-twitch')
 
 slackTwitch.config.slack.setToken("SLACK_BOT_API_TOKEN")
                 .slack.setChannelName("SLACK_CHANNEL_NAME")
-                .slack.setCommandPrefix("exec")
                 .slack.setIcon(":cat:")
                 .slack.setName("SLACK_BOT_USER_NAME")
                 .twitch.setBotName("TWITCH_BOT_NAME")
