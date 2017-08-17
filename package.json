@@ -1,11 +1,25 @@
 {
   "name": "slack-to-twitch",
-  "version": "1.0.8",
+  "version": "1.0.10",
   "description": "slack to twitch irc proxy",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neonmaccca/slack-to-twitch"
+  },
+  "keywords": [
+    "slack",
+    "twitch",
+    "irc",
+    "bot"
+  ],
+  "bugs": {
+    "url": "https://github.com/neonmaccca/slack-to-twitch/issues"
+  },
+  "homepage": "https://github.com/neonmaccca/slack-to-twitch#readme",
   "author": "mac@crudle.co.uk",
   "license": "ISC",
   "dependencies": {
