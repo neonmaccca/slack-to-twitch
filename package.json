@@ -1,0 +1,15 @@
+{
+  "name": "slack-to-twitch",
+  "version": "1.0.8",
+  "description": "slack to twitch irc proxy",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "mac@crudle.co.uk",
+  "license": "ISC",
+  "dependencies": {
+    "slackbots": "^1.0.2",
+    "twitch-irc-lite": "^1.0.2"
+  }
+}
