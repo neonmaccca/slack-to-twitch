@@ -22,7 +22,7 @@ var config = {
             return config
         },
         setChannelName:function(c){
-            config.slack.channelName = c
+            config.slack.channel = c
             return config
         },
         setIcon:function(i){
@@ -59,29 +59,34 @@ function startSlackToTwitch(){
     twitchBot = new twitch(config.twitch.token, config.twitch.botName);
     twitchBot.join(config.twitch.channel)
     twitchBot.chatEvents.addListener('message', function(channel, from, message){
-        slackBot.postMessageToChannel(config.slack.channelName, "IRC User "+from+": "+message, params);
+        slackBot.postMessageToChannel(config.slack.channel, "IRC User "+from+": "+message, params);
     });
     
     slackBot.on('message', function(data) { 
-        if(isCommandString(data.text,data.channel)===true&&data.text!=null){
-            if(checkAdmin(data.user)===true){
-                twitchBot.chat("/"+data.text.substring(5,data.text.length), config.twitch.channel); 
-                slackBot.postMessageToChannel(config.slack.channelName, "Sent command '/"+command+"' to twitch.", params);
-            }else{
-                getUserName(data.user,function(userName){
-                    slackBot.postMessageToChannel(config.slack.channelName, "Slack user "+userName+" is not a Slack admin for this team and therefore cannot execute Twitch commands.", params);  
-                })
+        slackBot.getChannels().then(function(chls){
+            const index2 = chls.channels.findIndex(channel => channel.id === data.channel);
+           //console.log(chls.channels[2])
+            if(isCommandString(data.text,chls.channels[index2].name)===true&&data.text!=null){
+                if(checkAdmin(data.user)===true){
+                    twitchBot.chat("/"+data.text.substring(5,data.text.length), config.twitch.channel); 
+                    slackBot.postMessageToChannel(config.slack.channel, "Sent command '/"+command+"' to twitch.", params);
+                }else{
+                    getUserName(data.user,function(userName){
+                        console.log(userName)
+                        slackBot.postMessageToChannel(config.slack.channel, "Slack user "+userName+" is not a Slack admin for this team and therefore cannot execute Twitch commands.", params);  
+                    })
+                }
             }
-        }
+        })
+
     });
 }
 function getUserName(userId,callback){
-    console.log(userId)
+    //console.log(userId)
     slackBot.getUsers().then(function(userData){
-        const index = userData.members.findIndex(member => member.id === userId);
-        console.log(userData.members[index].name)
-        callback(userData.members[index].name)
-        return userData.members[index].name
+        const index3 = userData.members.findIndex(member => member.id === userId);
+        //console.log(userData.members[index].name)
+        callback(userData.members[index3].name)
     })
 }
 function checkAdmin(user){
@@ -102,7 +107,14 @@ function isCommandString(message,channel){
         return false
     }
 }
-
+function getChannelName(channelId,callBack){
+    slackBot.getChannels().then(function(channels){
+        console.log("channel "+channelId)
+        const index2 = channels.channels.findIndex(channel => channel.id === channelId);
+        console.log("index "+channels.channels[index2].name)
+        callBack()
+    })
+}
 module.exports = {
     config:config,
     start:startSlackToTwitch
