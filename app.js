@@ -67,15 +67,18 @@ function startSlackToTwitch(){
             const index2 = chls.channels.findIndex(channel => channel.id === data.channel);
            //console.log(chls.channels[2])
             if(isCommandString(data.text,chls.channels[index2].name)===true&&data.text!=null){
-                if(checkAdmin(data.user)===true){
-                    twitchBot.chat("/"+data.text.substring(5,data.text.length), config.twitch.channel); 
-                    slackBot.postMessageToChannel(config.slack.channel, "Sent command '/"+command+"' to twitch.", params);
-                }else{
-                    getUserName(data.user,function(userName){
-                        console.log(userName)
-                        slackBot.postMessageToChannel(config.slack.channel, "Slack user "+userName+" is not a Slack admin for this team and therefore cannot execute Twitch commands.", params);  
-                    })
-                }
+                checkAdmin(data.user,function(validUser){        
+                    if(validUser===true){
+                        twitchBot.chat("/"+data.text.substring(5,data.text.length), config.twitch.channel); 
+                        slackBot.postMessageToChannel(config.slack.channel, "Sent command '/"+command+"' to twitch.", params);
+                    }else{
+                        getUserName(data.user,function(userName){
+                            console.log(userName)
+                            slackBot.postMessageToChannel(config.slack.channel, "Slack user "+userName+" is not a Slack admin for this team and therefore cannot execute Twitch commands.", params);  
+                        })
+                    }
+                })
+
             }
         })
 
@@ -89,13 +92,13 @@ function getUserName(userId,callback){
         callback(userData.members[index3].name)
     })
 }
-function checkAdmin(user){
+function checkAdmin(user, callBack){
     slackBot.getUsers().then(function(userData){
         const index = userData.members.findIndex(member => member.id === user);
         if(index!=-1&&userData.members[index].is_admin==true){
-            return true
+            callBack(true)
         }else{
-            return false
+            callBack(false)
         }
     })
 }
